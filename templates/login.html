@@ -5,6 +5,11 @@
 
     <meta charset="UTF-8">
 
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
     <title>Login - VeysAuction</title>
 
     <style>
@@ -116,6 +121,36 @@
             text-decoration: none;
         }
 
+        /* BUG FOUND MESSAGE */
+
+        .bug-message {
+            margin-bottom: 25px;
+
+            padding: 20px;
+
+            background: #ecfdf5;
+
+            border: 2px solid #16a34a;
+
+            border-radius: 10px;
+
+            color: #166534;
+
+            line-height: 1.6;
+        }
+
+        .bug-message h3 {
+            margin-top: 0;
+
+            color: #15803d;
+
+            text-align: center;
+        }
+
+        .bug-message p {
+            margin: 8px 0 15px;
+        }
+
     </style>
 
 </head>
@@ -126,16 +161,54 @@
 
 <div class="login-box">
 
+
     <h1>
         🚗 VeysAuction
     </h1>
+
 
     <h2>
         Login
     </h2>
 
 
-    <form action="/login" method="post">
+    {% if error %}
+
+    <div class="bug-message">
+
+        <h3>
+            🎉 Veys congratulates you!
+        </h3>
+
+
+        <strong>
+            EN:
+        </strong>
+
+        <p>
+            You found Bug #1!
+            Login accepts an incorrect password.
+        </p>
+
+
+        <strong>
+            AZ:
+        </strong>
+
+        <p>
+            Siz Bug #1-i tapdınız!
+            Login səhv parolu qəbul edir.
+        </p>
+
+    </div>
+
+    {% endif %}
+
+
+    <form
+        action="/login"
+        method="post"
+    >
 
         <label>
             Username
@@ -182,6 +255,7 @@
     >
         ← Back to VeysAuction
     </a>
+
 
 </div>
 

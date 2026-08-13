@@ -1,4 +1,3 @@
-
 from fastapi import FastAPI, HTTPException, Request, Form, Depends
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
@@ -83,6 +82,7 @@ class Bid(BaseModel):
 # =========================================================
 
 auction_end = datetime.now() + timedelta(days=1)
+
 cars = [
     {
         "id": 1,
@@ -160,9 +160,6 @@ def get_car_from_memory(car_id: int):
 
 
 def sync_car_price(car_id: int, price: float):
-    """
-    Updates the price in the memory list.
-    """
 
     car = get_car_from_memory(car_id)
 
@@ -404,7 +401,8 @@ def bid_page(
         name="bid.html",
         context={
             "request": request,
-            "car": car
+            "car": car,
+            "error": None
         }
     )
 
@@ -416,6 +414,7 @@ def bid_page(
 @app.post("/cars/{car_id}/bid")
 def make_bid(
     car_id: int,
+    request: Request,
     username: str = Form(...),
     amount: float = Form(...)
 ):
@@ -434,10 +433,38 @@ def make_bid(
             detail="Car not found"
         )
 
+    # =====================================================
+    # BUG #3 — SYSTEM ACCEPTS NEGATIVE BID
+    # =====================================================
+
+    if amount < 0:
+
+        return templates.TemplateResponse(
+            request=request,
+            name="bid.html",
+            context={
+                "request": request,
+                "car": car,
+                "error": "negative"
+            },
+            status_code=200
+        )
+
+    # =====================================================
+    # BUG #2 — SYSTEM ACCEPTS BID LOWER THAN CURRENT PRICE
+    # =====================================================
+
     if amount <= car["price"]:
-        raise HTTPException(
-            status_code=400,
-            detail="Bid must be higher than current price"
+
+        return templates.TemplateResponse(
+            request=request,
+            name="bid.html",
+            context={
+                "request": request,
+                "car": car,
+                "error": True
+            },
+            status_code=200
         )
 
     new_bid = {
@@ -640,7 +667,8 @@ def login_page(request: Request):
         request=request,
         name="login.html",
         context={
-            "request": request
+            "request": request,
+            "error": None
         }
     )
 
@@ -651,6 +679,7 @@ def login_page(request: Request):
 
 @app.post("/login")
 def login_user(
+    request: Request,
     username: str = Form(...),
     password: str = Form(...),
     db=Depends(get_db)
@@ -668,14 +697,23 @@ def login_user(
             detail="Invalid username or password"
         )
 
+    # =====================================================
+    # BUG #1 — INTENTIONALLY CREATED FOR QA TRAINING
+    # =====================================================
+
     if user.password != password:
-        raise HTTPException(
-            status_code=401,
-            detail="Invalid username or password"
+
+        return templates.TemplateResponse(
+            request=request,
+            name="login.html",
+            context={
+                "request": request,
+                "error": True
+            },
+            status_code=200
         )
 
     return RedirectResponse(
         url="/",
         status_code=303
     )
-
