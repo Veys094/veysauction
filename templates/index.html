@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+```
+<title>VeysAuction</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #f4f5f7;
+        color: #222;
+    }
+
+    header {
+        background: #111827;
+        color: white;
+        padding: 18px 50px;
+
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .logo {
+        font-size: 24px;
+        font-weight: bold;
+    }
+
+    .nav a {
+        color: white;
+        text-decoration: none;
+        margin-left: 20px;
+    }
+
+    .nav a:hover {
+        color: #f59e0b;
+    }
+
+    .hero {
+        background: white;
+        padding: 50px 20px;
+        text-align: center;
+    }
+
+    .hero h1 {
+        font-size: 40px;
+        margin-bottom: 10px;
+    }
+
+    .hero p {
+        color: #666;
+        font-size: 18px;
+    }
+
+    .auction-timer {
+        width: fit-content;
+        margin: 20px auto;
+        padding: 12px 20px;
+
+        background: white;
+        border-radius: 10px;
+
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+
+        font-weight: bold;
+    }
+
+    #timer {
+        color: #dc2626;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 40px auto;
+        padding: 0 20px;
+    }
+
+    .section-title {
+        font-size: 28px;
+        margin-bottom: 25px;
+    }
+
+    .cars {
+        display: grid;
+        grid-template-columns: repeat(
+            auto-fit,
+            minmax(300px, 1fr)
+        );
+
+        gap: 25px;
+    }
+
+    .car-card {
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+
+        box-shadow:
+            0 4px 15px rgba(0, 0, 0, 0.1);
+
+        transition: 0.2s;
+    }
+
+    .car-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .car-image {
+        width: 100%;
+        height: 230px;
+
+        object-fit: cover;
+        display: block;
+    }
+
+    .car-info {
+        padding: 20px;
+    }
+
+    .car-title {
+        font-size: 22px;
+        margin-top: 0;
+    }
+
+    .details {
+        color: #555;
+        margin: 8px 0;
+    }
+
+    .price {
+        font-size: 24px;
+        font-weight: bold;
+
+        color: #16a34a;
+
+        margin-top: 15px;
+    }
+
+    .buttons {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+    }
+
+    .button {
+        flex: 1;
+
+        padding: 11px;
+
+        border-radius: 6px;
+
+        text-align: center;
+        text-decoration: none;
+
+        color: white;
+        background: #2563eb;
+    }
+
+    .button:hover {
+        background: #1d4ed8;
+    }
+
+    .bid {
+        background: #f59e0b;
+    }
+
+    .bid:hover {
+        background: #d97706;
+    }
+
+    footer {
+        margin-top: 60px;
+
+        background: #111827;
+        color: white;
+
+        text-align: center;
+        padding: 25px;
+    }
+
+    @media (max-width: 700px) {
+        header {
+            padding: 18px 20px;
+
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .nav a {
+            margin-left: 10px;
+            margin-right: 10px;
+        }
+
+        .hero h1 {
+            font-size: 32px;
+        }
+
+        .buttons {
+            flex-direction: column;
+        }
+    }
+</style>
+```
+
+</head>
+
+<body>
+
+<header>
+
+```
+<div class="logo">
+    🚗 VeysAuction
+</div>
+
+<div class="nav">
+    <a href="/">Home</a>
+    <a href="/register">Register</a>
+    <a href="/login">Login</a>
+    <a href="/docs">API</a>
+</div>
+```
+
+</header>
+
+<section class="hero">
+
+```
+<h1>
+    Welcome to VeysAuction
+</h1>
+
+<div class="auction-timer">
+
+    ⏱ Auction ends in:
+
+    <span id="timer">
+        Loading...
+    </span>
+
+</div>
+
+<p>
+    Find your next car at our online auction
+</p>
+```
+
+</section>
+
+<div class="container">
+
+```
+<h2 class="section-title">
+    🚘 Available Cars
+</h2>
+
+
+<div class="cars">
+
+    {% for car in cars %}
+
+    <div class="car-card">
+
+        <img
+            class="car-image"
+src="/static/images/{{ car.image }}"
+alt="{{ car.brand }} {{ car.model }}"
+        >
+
+        <div class="car-info">
+
+            <h2 class="car-title">
+                {{ car.brand }} {{ car.model }}
+            </h2>
+
+            <div class="details">
+                Year:
+                <b>{{ car.year }}</b>
+            </div>
+
+            <div class="details">
+                Auction ID:
+                <b>{{ car.id }}</b>
+            </div>
+
+            <div class="details">
+                Plate:
+                <b>{{ car.plate_number }}</b>
+            </div>
+
+            <div class="price">
+                ${{ "%.2f"|format(car.price) }}
+            </div>
+
+            <div class="buttons">
+
+                <a
+                    href="/cars/{{ car.id }}/details"
+                    class="button"
+                >
+                    View Details
+                </a>
+
+                <a
+                    href="/cars/{{ car.id }}/bid"
+                    class="button bid"
+                >
+                    🔨 Bid
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    {% endfor %}
+
+</div>
+```
+
+</div>
+
+<footer>
+
+```
+VeysAuction © 2026
+```
+
+</footer>
+
+<script>
+
+    const auctionEnd =
+        new Date(
+            "{{ auction_end.isoformat() }}"
+        ).getTime();
+
+
+    const timer =
+        setInterval(function () {
+
+            const now =
+                new Date().getTime();
+
+            const distance =
+                auctionEnd - now;
+
+
+            if (distance <= 0) {
+
+                clearInterval(timer);
+
+                document.getElementById("timer").innerHTML =
+                    "Auction ended";
+
+                return;
+            }
+
+
+            const hours =
+                Math.floor(
+                    distance /
+                    (1000 * 60 * 60)
+                );
+
+
+            const minutes =
+                Math.floor(
+                    (distance %
+                    (1000 * 60 * 60)) /
+                    (1000 * 60)
+                );
+
+
+            const seconds =
+                Math.floor(
+                    (distance %
+                    (1000 * 60)) /
+                    1000
+                );
+
+
+            document.getElementById("timer").innerHTML =
+                hours + "h " +
+                minutes + "m " +
+                seconds + "s";
+
+        }, 1000);
+
+</script>
+
+</body>
+
+</html>

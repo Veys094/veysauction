@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+```
+<title>{{ car.brand }} {{ car.model }} - VeysAuction</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #f4f5f7;
+        color: #222;
+    }
+
+    header {
+        background: #111827;
+        color: white;
+        padding: 18px 50px;
+
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .logo {
+        font-size: 24px;
+        font-weight: bold;
+    }
+
+    header a {
+        color: white;
+        text-decoration: none;
+    }
+
+    header a:hover {
+        color: #f59e0b;
+    }
+
+    .container {
+        max-width: 1100px;
+        margin: 40px auto;
+        padding: 0 20px;
+    }
+
+    .car-details {
+        background: white;
+        border-radius: 15px;
+        overflow: hidden;
+
+        box-shadow:
+            0 5px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .car-image {
+        width: 100%;
+        height: 450px;
+
+        object-fit: cover;
+        display: block;
+    }
+
+    .info {
+        padding: 30px;
+    }
+
+    h1 {
+        margin-top: 0;
+        font-size: 32px;
+    }
+
+    .detail {
+        font-size: 18px;
+        margin: 12px 0;
+        color: #555;
+    }
+
+    .price {
+        font-size: 30px;
+        font-weight: bold;
+
+        color: #16a34a;
+
+        margin: 25px 0;
+    }
+
+    .buttons {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+
+    .button {
+        display: inline-block;
+
+        padding: 13px 25px;
+
+        border-radius: 7px;
+
+        text-decoration: none;
+        color: white;
+
+        background: #2563eb;
+    }
+
+    .button:hover {
+        background: #1d4ed8;
+    }
+
+    .bid {
+        background: #f59e0b;
+    }
+
+    .bid:hover {
+        background: #d97706;
+    }
+
+    .back {
+        display: inline-block;
+
+        margin-top: 25px;
+
+        color: #2563eb;
+        text-decoration: none;
+    }
+
+    .bids {
+        margin-top: 35px;
+    }
+
+    .bids h2 {
+        margin-bottom: 15px;
+    }
+
+    .bid-item {
+        background: #f9fafb;
+
+        padding: 15px;
+
+        margin-top: 10px;
+
+        border-radius: 7px;
+
+        border: 1px solid #e5e7eb;
+    }
+
+    .no-bids {
+        color: #777;
+    }
+
+    @media (max-width: 700px) {
+        header {
+            padding: 18px 20px;
+        }
+
+        .car-image {
+            height: 300px;
+        }
+
+        .info {
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 27px;
+        }
+
+        .buttons {
+            flex-direction: column;
+        }
+
+        .button {
+            text-align: center;
+        }
+    }
+</style>
+```
+
+</head>
+
+<body>
+
+<header>
+
+```
+<div class="logo">
+    🚗 VeysAuction
+</div>
+
+<a href="/">
+    Home
+</a>
+```
+
+</header>
+
+<div class="container">
+
+```
+<div class="car-details">
+
+    <img
+        class="car-image"
+        src="/static/images/{{ car.image }}"
+        alt="{{ car.brand }} {{ car.model }}"
+    >
+
+
+    <div class="info">
+
+        <h1>
+            {{ car.brand }} {{ car.model }}
+        </h1>
+
+
+        <div class="detail">
+            📅 Year:
+            <b>{{ car.year }}</b>
+        </div>
+
+
+        <div class="detail">
+            🔢 Plate:
+            <b>{{ car.plate_number }}</b>
+        </div>
+
+
+        <div class="detail">
+            🆔 Auction ID:
+            <b>{{ car.id }}</b>
+        </div>
+
+
+        <div class="price">
+            ${{ "%.2f"|format(car.price) }}
+        </div>
+
+
+        <div class="buttons">
+
+            <a
+                href="/cars/{{ car.id }}/bid"
+                class="button bid"
+            >
+                🔨 Place Bid
+            </a>
+
+
+            <a
+                href="/"
+                class="button"
+            >
+                ← Back
+            </a>
+
+        </div>
+
+
+        <div class="bids">
+
+            <h2>
+                📋 Bid History
+            </h2>
+
+
+            {% if bids %}
+
+                {% for bid in bids %}
+
+                    <div class="bid-item">
+
+                        👤 <b>{{ bid.username }}</b>
+
+                        — ${{ "%.2f"|format(bid.amount) }}
+
+                    </div>
+
+                {% endfor %}
+
+            {% else %}
+
+                <p class="no-bids">
+                    No bids yet.
+                </p>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+```
+
+</div>
+
+</body>
+
+</html>
