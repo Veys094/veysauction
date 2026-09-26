@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -52,6 +51,10 @@
             font: inherit;
         }
 
+        button {
+            cursor: pointer;
+        }
+
         .topbar {
             background: var(--navy);
             color: white;
@@ -97,7 +100,7 @@
         .nav-links {
             display: flex;
             align-items: center;
-            gap: 30px;
+            gap: 25px;
         }
 
         .nav-links a {
@@ -438,28 +441,19 @@
             height: 45px;
             padding: 0 14px;
             border: 1px solid var(--border);
-            border-radius: 9px;
+            border-radius: 10px;
             background: white;
-        }
-
-        .search-box span {
-            color: #8b95a5;
-            font-size: 17px;
+            color: var(--muted);
         }
 
         .search-box input {
             width: 100%;
-            min-width: 0;
-            border: 0;
-            outline: 0;
+            height: 100%;
+            border: none;
+            outline: none;
             background: transparent;
             color: var(--text);
             font-size: 13px;
-        }
-
-        .search-box:focus-within {
-            border-color: #d5a03f;
-            box-shadow: 0 0 0 3px rgba(233,170,53,.12);
         }
 
         .cars {
@@ -469,169 +463,145 @@
         }
 
         .car-card {
-            min-width: 0;
             overflow: hidden;
+            background: white;
             border: 1px solid var(--border);
             border-radius: var(--radius);
-            background: white;
-            transition: transform .25s, box-shadow .25s;
+            transition: transform .2s, box-shadow .2s;
         }
 
         .car-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 16px 38px rgba(16,24,40,.09);
+            transform: translateY(-4px);
+            box-shadow: 0 15px 35px rgba(16,24,40,.08);
         }
 
         .car-photo-wrap {
             position: relative;
-            overflow: hidden;
             height: 225px;
-            background: #e9edf2;
+            overflow: hidden;
+            background: #e7ebf1;
         }
 
         .car-image {
-            display: block;
             width: 100%;
             height: 100%;
+            display: block;
             object-fit: cover;
-            transition: transform .4s;
+            transition: transform .35s;
         }
 
         .car-card:hover .car-image {
-            transform: scale(1.035);
+            transform: scale(1.04);
         }
 
         .car-badge {
             position: absolute;
-            top: 15px;
-            left: 15px;
-            display: inline-flex;
-            align-items: center;
-            gap: 7px;
-            padding: 8px 10px;
-            border: 1px solid rgba(255,255,255,.6);
+            top: 14px;
+            left: 14px;
+            padding: 7px 10px;
             border-radius: 7px;
-            background: rgba(255,255,255,.94);
-            color: #334155;
-            font-size: 10px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: .6px;
-        }
-
-        .car-badge::before {
-            content: "";
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: var(--green);
+            background: rgba(16,24,40,.88);
+            color: white;
+            font-size: 11px;
+            font-weight: 600;
         }
 
         .car-info {
-            padding: 22px;
+            padding: 21px;
         }
 
         .car-category {
             color: #a9781c;
-            font-size: 10px;
+            font-size: 11px;
             font-weight: 700;
+            letter-spacing: 1px;
             text-transform: uppercase;
-            letter-spacing: 1.4px;
         }
 
         .car-title {
-            margin: 7px 0 17px;
+            margin: 8px 0 18px;
             font-family: "Manrope", sans-serif;
             font-size: 21px;
-            line-height: 1.35;
             font-weight: 800;
-            letter-spacing: -.5px;
         }
 
         .car-details {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 13px 10px;
-            padding: 16px 0;
-            border-top: 1px solid #eef0f4;
-            border-bottom: 1px solid #eef0f4;
-        }
-
-        .detail-item {
-            min-width: 0;
+            gap: 15px 10px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
         }
 
         .detail-label {
             display: block;
             margin-bottom: 5px;
-            color: #8b95a5;
+            color: var(--muted);
             font-size: 11px;
         }
 
         .detail-value {
             display: block;
+            color: var(--text);
+            font-size: 12px;
+            font-weight: 600;
             overflow-wrap: anywhere;
-            color: #344054;
-            font-size: 13px;
-            font-weight: 700;
         }
 
         .price-row {
             display: flex;
-            justify-content: space-between;
             align-items: end;
-            gap: 10px;
-            padding-top: 18px;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 19px 0;
         }
 
         .price-label {
-            display: block;
-            margin-bottom: 5px;
-            color: #8b95a5;
+            color: var(--muted);
             font-size: 11px;
         }
 
         .price {
-            color: var(--green);
+            margin-top: 5px;
+            color: var(--navy);
             font-family: "Manrope", sans-serif;
             font-size: 25px;
-            line-height: 1.25;
             font-weight: 800;
-            letter-spacing: -.7px;
         }
 
         .currency {
-            color: #667085;
-            font-size: 12px;
-            font-weight: 600;
+            padding: 6px 8px;
+            border-radius: 6px;
+            background: #f3f5f8;
+            color: #647084;
+            font-size: 10px;
+            font-weight: 700;
         }
 
         .buttons {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-top: 20px;
+            gap: 9px;
         }
 
         .button {
-            display: flex;
+            display: inline-flex;
             justify-content: center;
             align-items: center;
-            min-height: 44px;
+            min-height: 42px;
             padding: 10px 12px;
             border: 1px solid var(--border);
-            border-radius: 9px;
+            border-radius: 8px;
             background: white;
-            color: #344054;
-            text-align: center;
+            color: var(--text);
             font-size: 12px;
             font-weight: 700;
+            text-align: center;
             transition: .2s;
         }
 
         .button:hover {
-            border-color: #aeb8c7;
-            background: #f8fafc;
+            border-color: var(--navy);
         }
 
         .button.bid {
@@ -640,18 +610,29 @@
             color: var(--navy);
         }
 
-        .button.bid:hover {
-            border-color: var(--gold-hover);
+        .button.bid:hover,
+        .button.add-cart:hover {
             background: var(--gold-hover);
+        }
+
+        .cart-form {
+            grid-column: 1 / -1;
+            width: 100%;
+        }
+
+        .add-cart {
+            width: 100%;
+            border-color: var(--gold);
+            background: #fff8e9;
+            color: #7c5310;
         }
 
         .empty-state {
             display: none;
             grid-column: 1 / -1;
-            padding: 45px 20px;
-            border: 1px dashed #cbd2dd;
-            border-radius: 14px;
-            background: white;
+            padding: 40px 20px;
+            border: 1px dashed #cbd2de;
+            border-radius: 12px;
             color: var(--muted);
             text-align: center;
         }
@@ -664,16 +645,16 @@
         .footer-inner {
             max-width: 1260px;
             margin: auto;
-            padding: 35px 30px;
+            padding: 30px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 20px;
+            gap: 25px;
         }
 
         .footer-brand {
             font-family: "Manrope", sans-serif;
-            font-size: 17px;
+            font-size: 19px;
             font-weight: 800;
         }
 
@@ -683,13 +664,17 @@
 
         .footer-note {
             margin-top: 7px;
-            color: #98a2b3;
+            color: #9ca8ba;
             font-size: 12px;
         }
 
         .footer-links {
             display: flex;
-            gap: 22px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .footer-links a {
             color: #c5ccda;
             font-size: 12px;
         }
@@ -699,41 +684,42 @@
         }
 
         @media (max-width: 1000px) {
-            .hero-inner {
-                grid-template-columns: 1fr .75fr;
-                gap: 25px;
-            }
-
-            .cars {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-            }
-
-            .nav-links {
-                gap: 17px;
-            }
-
-            .stat {
-                padding: 20px 15px;
-            }
-        }
-
-        @media (max-width: 700px) {
             .navbar {
-                padding: 17px 20px;
                 flex-wrap: wrap;
+                padding-top: 18px;
+                padding-bottom: 18px;
             }
 
             .nav-links {
                 order: 3;
                 width: 100%;
-                justify-content: space-between;
-                gap: 10px;
-                padding-top: 10px;
-                border-top: 1px solid #303b4e;
+                justify-content: center;
+                flex-wrap: wrap;
             }
 
-            .nav-links a {
-                font-size: 12px;
+            .hero-inner {
+                grid-template-columns: 1fr;
+                gap: 35px;
+            }
+
+            .hero-panel {
+                justify-self: start;
+                max-width: 430px;
+            }
+
+            .cars {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 650px) {
+            .navbar {
+                padding: 18px;
+                gap: 15px;
+            }
+
+            .brand {
+                font-size: 19px;
             }
 
             .nav-actions {
@@ -749,62 +735,50 @@
                 font-size: 12px;
             }
 
+            .nav-links {
+                gap: 16px;
+            }
+
             .hero-inner {
-                grid-template-columns: 1fr;
-                padding: 45px 22px 35px;
+                padding: 45px 20px;
             }
 
             .hero h1 {
-                letter-spacing: -1.3px;
+                letter-spacing: -1px;
             }
 
             .hero-description {
                 font-size: 14px;
             }
 
-            .hero-panel {
-                justify-self: stretch;
-                max-width: none;
-            }
-
             .stats-wrap {
-                padding: 0 20px;
+                padding: 0 15px;
             }
 
             .stats {
                 grid-template-columns: 1fr;
-                border-top: 1px solid var(--border);
-                border-radius: 12px;
             }
 
             .stat {
-                padding: 15px 18px;
+                padding: 16px 20px;
             }
 
             .stat + .stat {
-                border-left: 0;
+                border-left: none;
                 border-top: 1px solid var(--border);
             }
 
             .container {
-                padding: 45px 20px 55px;
+                padding: 45px 18px;
             }
 
             .section-heading {
                 align-items: start;
-            }
-
-            .section-title {
-                font-size: 27px;
-            }
-
-            .car-count {
-                margin-top: 5px;
+                flex-direction: column;
             }
 
             .cars {
                 grid-template-columns: 1fr;
-                gap: 18px;
             }
 
             .car-photo-wrap {
@@ -844,6 +818,7 @@
             <a href="/">Home</a>
             <a href="#cars">Browse Cars</a>
             <a href="/docs">API Docs</a>
+            <a href="/cart">Cart</a>
         </div>
 
         <div class="nav-actions">
@@ -869,8 +844,13 @@
             </p>
 
             <div class="hero-buttons">
-                <a href="#cars" class="primary-button">Explore Vehicles ↘</a>
-                <a href="/register" class="secondary-button">Join the Auction</a>
+                <a href="#cars" class="primary-button">
+                    Explore Vehicles ↘
+                </a>
+
+                <a href="/register" class="secondary-button">
+                    Join the Auction
+                </a>
             </div>
         </div>
 
@@ -881,17 +861,21 @@
             </div>
 
             <h2 class="panel-title">Time is ticking.</h2>
-            <p class="panel-subtitle">Don't miss your opportunity.</p>
+            <p class="panel-subtitle">
+                Don't miss your opportunity.
+            </p>
 
             <div class="timer" id="timer">
                 <div class="timer-unit">
                     <strong id="hours">--</strong>
                     <span>Hours</span>
                 </div>
+
                 <div class="timer-unit">
                     <strong id="minutes">--</strong>
                     <span>Minutes</span>
                 </div>
+
                 <div class="timer-unit">
                     <strong id="seconds">--</strong>
                     <span>Seconds</span>
@@ -933,7 +917,11 @@
     <div class="section-heading">
         <div>
             <div class="section-kicker">The current collection</div>
-            <h2 class="section-title">Available vehicles</h2>
+
+            <h2 class="section-title">
+                Available vehicles
+            </h2>
+
             <p class="section-description">
                 Explore the listings and find your next ride.
             </p>
@@ -947,6 +935,7 @@
     <div class="toolbar">
         <label class="search-box">
             <span>⌕</span>
+
             <input
                 type="search"
                 id="carSearch"
@@ -957,9 +946,13 @@
     </div>
 
     <div class="cars" id="carGrid">
+
         {% for car in cars %}
-        <article class="car-card"
-                 data-search="{{ car.brand }} {{ car.model }} {{ car.year }} {{ car.plate_number }}">
+
+        <article
+            class="car-card"
+            data-search="{{ car.brand }} {{ car.model }} {{ car.year }} {{ car.plate_number }}"
+        >
 
             <div class="car-photo-wrap">
                 <img
@@ -969,11 +962,15 @@
                     loading="lazy"
                 >
 
-                <span class="car-badge">Auction listing</span>
+                <span class="car-badge">
+                    Auction listing
+                </span>
             </div>
 
             <div class="car-info">
-                <div class="car-category">Vehicle #{{ car.id }}</div>
+                <div class="car-category">
+                    Vehicle #{{ car.id }}
+                </div>
 
                 <h3 class="car-title">
                     {{ car.brand }} {{ car.model }}
@@ -992,22 +989,28 @@
 
                     <div class="detail-item">
                         <span class="detail-label">Registration</span>
-                        <span class="detail-value">{{ car.plate_number }}</span>
+                        <span class="detail-value">
+                            {{ car.plate_number }}
+                        </span>
                     </div>
 
                     <div class="detail-item">
                         <span class="detail-label">Availability</span>
-                        <span class="detail-value">Listed for auction</span>
+                        <span class="detail-value">
+                            Listed for auction
+                        </span>
                     </div>
                 </div>
 
                 <div class="price-row">
                     <div>
                         <span class="price-label">Current price</span>
+
                         <div class="price">
                             ${{ "%.2f"|format(car.price) }}
                         </div>
                     </div>
+
                     <span class="currency">USD</span>
                 </div>
 
@@ -1025,21 +1028,45 @@
                     >
                         Place a Bid ↗
                     </a>
+
+                    <form
+                        class="cart-form"
+                        action="/cart/add/{{ car.id }}"
+                        method="post"
+                    >
+                        <input
+                            type="hidden"
+                            name="quantity"
+                            value="1"
+                        >
+
+                        <button
+                            type="submit"
+                            class="button add-cart"
+                        >
+                            Add to Cart +
+                        </button>
+                    </form>
                 </div>
             </div>
         </article>
+
         {% endfor %}
 
         <div class="empty-state" id="emptyState">
             No vehicles match your search.
         </div>
+
     </div>
 </main>
 
 <footer>
     <div class="footer-inner">
         <div>
-            <div class="footer-brand">Veys<span>Auction</span></div>
+            <div class="footer-brand">
+                Veys<span>Auction</span>
+            </div>
+
             <div class="footer-note">
                 Find your drive. Win your auction.
             </div>
@@ -1050,6 +1077,7 @@
             <a href="/register">Register</a>
             <a href="/login">Login</a>
             <a href="/docs">API</a>
+            <a href="/cart">Cart</a>
         </div>
 
         <div class="footer-note">
@@ -1059,6 +1087,7 @@
 </footer>
 
 <script>
+    // Auction countdown
     const auctionEnd = new Date(
         "{{ auction_end.isoformat() }}"
     ).getTime();
@@ -1078,20 +1107,30 @@
             return;
         }
 
-        const hours = Math.floor(distance / (1000 * 60 * 60));
+        const hours = Math.floor(
+            distance / (1000 * 60 * 60)
+        );
+
         const minutes = Math.floor(
             (distance % (1000 * 60 * 60)) / (1000 * 60)
         );
+
         const seconds = Math.floor(
             (distance % (1000 * 60)) / 1000
         );
 
-        hoursElement.textContent = String(hours).padStart(2, "0");
-        minutesElement.textContent = String(minutes).padStart(2, "0");
-        secondsElement.textContent = String(seconds).padStart(2, "0");
+        hoursElement.textContent =
+            String(hours).padStart(2, "0");
+
+        minutesElement.textContent =
+            String(minutes).padStart(2, "0");
+
+        secondsElement.textContent =
+            String(seconds).padStart(2, "0");
     }
 
     updateTimer();
+
     const timerInterval = setInterval(() => {
         updateTimer();
 
@@ -1100,6 +1139,8 @@
         }
     }, 1000);
 
+
+    // Search cars
     const searchInput = document.getElementById("carSearch");
     const carCards = document.querySelectorAll(".car-card");
     const emptyState = document.getElementById("emptyState");
@@ -1109,7 +1150,9 @@
         let visibleCount = 0;
 
         carCards.forEach(function (card) {
-            const searchableText = card.dataset.search.toLowerCase();
+            const searchableText =
+                card.dataset.search.toLowerCase();
+
             const matches = searchableText.includes(query);
 
             card.style.display = matches ? "" : "none";

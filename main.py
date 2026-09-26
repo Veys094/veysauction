@@ -4,8 +4,9 @@ from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from datetime import datetime, timedelta
+import secrets
 
-from database import SessionLocal, CarDB, UserDB, BidDB
+from database import SessionLocal, CarDB, UserDB, BidDB, CartItemDB
 
 
 app = FastAPI(title="VeysAuction API")
@@ -119,7 +120,6 @@ def load_cars_to_database():
 
     try:
         if db.query(CarDB).count() == 0:
-
             for car in cars:
                 new_car = CarDB(
                     id=car["id"],
@@ -147,11 +147,10 @@ bids = []
 
 
 # =========================================================
-# HELPER
+# HELPERS
 # =========================================================
 
 def get_car_from_memory(car_id: int):
-
     for car in cars:
         if car["id"] == car_id:
             return car
@@ -160,11 +159,15 @@ def get_car_from_memory(car_id: int):
 
 
 def sync_car_price(car_id: int, price: float):
-
     car = get_car_from_memory(car_id)
 
     if car:
         car["price"] = price
+
+
+def get_or_create_cart_key(request: Request):
+    """Return the visitor's cart key, or create a new one."""
+    return request.cookies.get("cart_key") or secrets.token_urlsafe(24)
 
 
 # =========================================================
@@ -173,7 +176,6 @@ def sync_car_price(car_id: int, price: float):
 
 @app.get("/")
 def home(request: Request):
-
     return templates.TemplateResponse(
         request=request,
         name="index.html",
@@ -187,12 +189,213 @@ def home(request: Request):
 
 
 # =========================================================
+# SHOPPING CART
+# =========================================================
+
+@app.get("/cart")
+def view_cart(
+    request: Request,
+    db=Depends(get_db)
+):
+    cart_key = get_or_create_cart_key(request)
+
+    cart_rows = (
+        db.query(CartItemDB)
+        .filter(CartItemDB.cart_key == cart_key)
+        .all()
+    )
+
+    cart_items = []
+    total = 0.0
+
+    for row in cart_rows:
+        car = get_car_from_memory(row.car_id)
+
+        if car is None:
+            continue
+
+        subtotal = float(car["price"]) * row.quantity
+
+        cart_items.append({
+            "id": row.id,
+            "car": car,
+            "quantity": row.quantity,
+            "subtotal": round(subtotal, 2)
+        })
+
+        total += subtotal
+
+    response = templates.TemplateResponse(
+        request=request,
+        name="cart.html",
+        context={
+            "request": request,
+            "cart_items": cart_items,
+            "total": round(total, 2)
+        }
+    )
+
+    response.set_cookie(
+        key="cart_key",
+        value=cart_key,
+        httponly=True,
+        samesite="lax",
+        max_age=60 * 60 * 24 * 30
+    )
+
+    return response
+
+
+@app.post("/cart/add/{car_id}")
+def add_to_cart(
+    car_id: int,
+    request: Request,
+    quantity: int = Form(1),
+    db=Depends(get_db)
+):
+    car = get_car_from_memory(car_id)
+
+    if car is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Car not found"
+        )
+
+    if quantity < 1:
+        raise HTTPException(
+            status_code=400,
+            detail="Quantity must be at least 1"
+        )
+
+    cart_key = get_or_create_cart_key(request)
+
+    item = (
+        db.query(CartItemDB)
+        .filter(
+            CartItemDB.cart_key == cart_key,
+            CartItemDB.car_id == car_id
+        )
+        .first()
+    )
+
+    if item:
+        item.quantity += quantity
+    else:
+        db.add(
+            CartItemDB(
+                cart_key=cart_key,
+                car_id=car_id,
+                quantity=quantity
+            )
+        )
+
+    db.commit()
+
+    response = RedirectResponse(
+        url="/cart",
+        status_code=303
+    )
+
+    response.set_cookie(
+        key="cart_key",
+        value=cart_key,
+        httponly=True,
+        samesite="lax",
+        max_age=60 * 60 * 24 * 30
+    )
+
+    return response
+
+
+@app.post("/cart/update/{item_id}")
+def update_cart_item(
+    item_id: int,
+    request: Request,
+    quantity: int = Form(...),
+    db=Depends(get_db)
+):
+    cart_key = request.cookies.get("cart_key")
+
+    if not cart_key:
+        raise HTTPException(
+            status_code=404,
+            detail="Cart not found"
+        )
+
+    item = (
+        db.query(CartItemDB)
+        .filter(
+            CartItemDB.id == item_id,
+            CartItemDB.cart_key == cart_key
+        )
+        .first()
+    )
+
+    if item is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Cart item not found"
+        )
+
+    if quantity < 1:
+        raise HTTPException(
+            status_code=400,
+            detail="Quantity must be at least 1"
+        )
+
+    item.quantity = quantity
+    db.commit()
+
+    return RedirectResponse(
+        url="/cart",
+        status_code=303
+    )
+
+
+@app.post("/cart/remove/{item_id}")
+def remove_from_cart(
+    item_id: int,
+    request: Request,
+    db=Depends(get_db)
+):
+    cart_key = request.cookies.get("cart_key")
+
+    if not cart_key:
+        raise HTTPException(
+            status_code=404,
+            detail="Cart not found"
+        )
+
+    item = (
+        db.query(CartItemDB)
+        .filter(
+            CartItemDB.id == item_id,
+            CartItemDB.cart_key == cart_key
+        )
+        .first()
+    )
+
+    if item is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Cart item not found"
+        )
+
+    db.delete(item)
+    db.commit()
+
+    return RedirectResponse(
+        url="/cart",
+        status_code=303
+    )
+
+
+# =========================================================
 # CAR API
 # =========================================================
 
 @app.get("/cars")
 def get_cars(db=Depends(get_db)):
-
     cars_from_db = db.query(CarDB).all()
 
     return [
@@ -214,7 +417,6 @@ def get_car(
     car_id: int,
     db=Depends(get_db)
 ):
-
     car = (
         db.query(CarDB)
         .filter(CarDB.id == car_id)
@@ -243,7 +445,6 @@ def create_car(
     car: Car,
     db=Depends(get_db)
 ):
-
     new_car = CarDB(
         brand=car.brand,
         model=car.model,
@@ -274,7 +475,6 @@ def update_car(
     car: Car,
     db=Depends(get_db)
 ):
-
     existing_car = (
         db.query(CarDB)
         .filter(CarDB.id == car_id)
@@ -317,7 +517,6 @@ def delete_car(
     car_id: int,
     db=Depends(get_db)
 ):
-
     car = (
         db.query(CarDB)
         .filter(CarDB.id == car_id)
@@ -352,7 +551,6 @@ def car_details(
     car_id: int,
     request: Request
 ):
-
     car = get_car_from_memory(car_id)
 
     if not car:
@@ -368,8 +566,7 @@ def car_details(
     ]
 
     # BUG #5 — QA TRAINING:
-    # Incorrect year on Hyundai Elantra details page.
-    # Original car data and image remain unchanged.
+    # Incorrect year on the Hyundai Elantra details page.
     car_for_details = car.copy()
 
     if car_id == 3:
@@ -395,7 +592,6 @@ def bid_page(
     car_id: int,
     request: Request
 ):
-
     car = get_car_from_memory(car_id)
 
     if not car:
@@ -426,7 +622,6 @@ def make_bid(
     username: str = Form(...),
     amount: float = Form(...)
 ):
-
     if datetime.now() >= auction_end:
         raise HTTPException(
             status_code=400,
@@ -441,13 +636,9 @@ def make_bid(
             detail="Car not found"
         )
 
-    # =====================================================
     # BUG #3 — QA TRAINING:
-    # Negative bid is rejected, but the page returns HTTP 200.
-    # =====================================================
-
+    # Negative bids are rejected, but the response status is 200.
     if amount < 0:
-
         return templates.TemplateResponse(
             request=request,
             name="bid.html",
@@ -459,16 +650,12 @@ def make_bid(
             status_code=200
         )
 
-    # =====================================================
     # BUG #2 — QA TRAINING:
-    # A bid lower than the current price is rejected with HTTP 200.
+    # Bids below the current price return HTTP 200.
     #
     # BUG #6 — QA TRAINING:
     # A bid equal to the current price is accepted.
-    # =====================================================
-
     if amount < car["price"]:
-
         return templates.TemplateResponse(
             request=request,
             name="bid.html",
@@ -487,7 +674,6 @@ def make_bid(
     }
 
     bids.append(new_bid)
-
     car["price"] = amount
 
     return RedirectResponse(
@@ -502,7 +688,6 @@ def make_bid(
 
 @app.get("/cars/{car_id}/winner")
 def get_winner(car_id: int):
-
     car = get_car_from_memory(car_id)
 
     if not car:
@@ -540,7 +725,6 @@ def get_winner(car_id: int):
 
 @app.get("/register")
 def register_page(request: Request):
-
     return templates.TemplateResponse(
         request=request,
         name="register.html",
@@ -560,10 +744,8 @@ def register_user(
     password: str = Form(...),
     db=Depends(get_db)
 ):
-
     # BUG #4 — QA TRAINING:
-    # Username/password are not validated for whitespace.
-    # Values containing only spaces can pass this route.
+    # Whitespace-only username/password are not validated.
 
     existing_user = (
         db.query(UserDB)
@@ -601,7 +783,6 @@ def create_user(
     user: User,
     db=Depends(get_db)
 ):
-
     existing_user = (
         db.query(UserDB)
         .filter(UserDB.username == user.username)
@@ -635,7 +816,6 @@ def create_user(
 
 @app.get("/users")
 def get_users(db=Depends(get_db)):
-
     users_from_db = db.query(UserDB).all()
 
     return [
@@ -653,7 +833,6 @@ def get_user(
     user_id: int,
     db=Depends(get_db)
 ):
-
     user = (
         db.query(UserDB)
         .filter(UserDB.id == user_id)
@@ -679,7 +858,6 @@ def get_user(
 
 @app.get("/login")
 def login_page(request: Request):
-
     return templates.TemplateResponse(
         request=request,
         name="login.html",
@@ -701,7 +879,6 @@ def login_user(
     password: str = Form(...),
     db=Depends(get_db)
 ):
-
     user = (
         db.query(UserDB)
         .filter(UserDB.username == username)
@@ -714,13 +891,9 @@ def login_user(
             detail="Invalid username or password"
         )
 
-    # =====================================================
-    # BUG #1 — INTENTIONALLY CREATED FOR QA TRAINING
+    # BUG #1 — QA TRAINING:
     # Wrong password returns HTTP 200 instead of an error status.
-    # =====================================================
-
     if user.password != password:
-
         return templates.TemplateResponse(
             request=request,
             name="login.html",

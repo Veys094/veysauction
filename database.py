@@ -1,16 +1,19 @@
-
-from sqlalchemy import create_engine, Column, Integer, String, Float
+from sqlalchemy import (
+    create_engine,
+    Column,
+    Integer,
+    String,
+    Float,
+    UniqueConstraint
+)
 from sqlalchemy.orm import declarative_base, sessionmaker
 
-
 DATABASE_URL = "sqlite:///./veysauction.db"
-
 
 engine = create_engine(
     DATABASE_URL,
     connect_args={"check_same_thread": False}
 )
-
 
 SessionLocal = sessionmaker(
     autocommit=False,
@@ -18,12 +21,11 @@ SessionLocal = sessionmaker(
     bind=engine
 )
 
-
 Base = declarative_base()
 
 
 # =========================
-# CAR
+# CARS
 # =========================
 
 class CarDB(Base):
@@ -39,19 +41,24 @@ class CarDB(Base):
 
 
 # =========================
-# USER
+# USERS
 # =========================
 
 class UserDB(Base):
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True, index=True)
-    username = Column(String, unique=True, nullable=False, index=True)
+    username = Column(
+        String,
+        unique=True,
+        nullable=False,
+        index=True
+    )
     password = Column(String, nullable=False)
 
 
 # =========================
-# BID
+# BIDS
 # =========================
 
 class BidDB(Base):
@@ -64,8 +71,28 @@ class BidDB(Base):
 
 
 # =========================
+# SHOPPING CART
+# =========================
+
+class CartItemDB(Base):
+    __tablename__ = "cart_items"
+
+    id = Column(Integer, primary_key=True, index=True)
+    cart_key = Column(String, nullable=False, index=True)
+    car_id = Column(Integer, nullable=False, index=True)
+    quantity = Column(Integer, nullable=False, default=1)
+
+    __table_args__ = (
+        UniqueConstraint(
+            "cart_key",
+            "car_id",
+            name="uq_cart_key_car_id"
+        ),
+    )
+
+
+# =========================
 # CREATE TABLES
 # =========================
 
 Base.metadata.create_all(bind=engine)
-
