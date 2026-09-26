@@ -1,307 +1,449 @@
+```html
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-```
-<title>{{ car.brand }} {{ car.model }} - VeysAuction</title>
+    <title>{{ car.brand }} {{ car.model }} | VeysAuction</title>
 
-<style>
-    * {
-        box-sizing: border-box;
-    }
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-    body {
-        margin: 0;
-        font-family: Arial, sans-serif;
-        background: #f4f5f7;
-        color: #222;
-    }
+    <style>
+        * {
+            box-sizing: border-box;
+        }
 
-    header {
-        background: #111827;
-        color: white;
-        padding: 18px 50px;
+        :root {
+            --bg: #080d18;
+            --panel: #111a2b;
+            --panel-light: #172238;
+            --border: rgba(255, 255, 255, 0.09);
+            --text: #f4f6fb;
+            --muted: #9ba8bd;
+            --gold: #f2bd57;
+            --gold-hover: #ffd47f;
+        }
 
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
+        body {
+            margin: 0;
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
 
-    .logo {
-        font-size: 24px;
-        font-weight: bold;
-    }
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
 
-    header a {
-        color: white;
-        text-decoration: none;
-    }
-
-    header a:hover {
-        color: #f59e0b;
-    }
-
-    .container {
-        max-width: 1100px;
-        margin: 40px auto;
-        padding: 0 20px;
-    }
-
-    .car-details {
-        background: white;
-        border-radius: 15px;
-        overflow: hidden;
-
-        box-shadow:
-            0 5px 20px rgba(0, 0, 0, 0.1);
-    }
-
-    .car-image {
-        width: 100%;
-        height: 450px;
-
-        object-fit: cover;
-        display: block;
-    }
-
-    .info {
-        padding: 30px;
-    }
-
-    h1 {
-        margin-top: 0;
-        font-size: 32px;
-    }
-
-    .detail {
-        font-size: 18px;
-        margin: 12px 0;
-        color: #555;
-    }
-
-    .price {
-        font-size: 30px;
-        font-weight: bold;
-
-        color: #16a34a;
-
-        margin: 25px 0;
-    }
-
-    .buttons {
-        display: flex;
-        gap: 15px;
-        flex-wrap: wrap;
-    }
-
-    .button {
-        display: inline-block;
-
-        padding: 13px 25px;
-
-        border-radius: 7px;
-
-        text-decoration: none;
-        color: white;
-
-        background: #2563eb;
-    }
-
-    .button:hover {
-        background: #1d4ed8;
-    }
-
-    .bid {
-        background: #f59e0b;
-    }
-
-    .bid:hover {
-        background: #d97706;
-    }
-
-    .back {
-        display: inline-block;
-
-        margin-top: 25px;
-
-        color: #2563eb;
-        text-decoration: none;
-    }
-
-    .bids {
-        margin-top: 35px;
-    }
-
-    .bids h2 {
-        margin-bottom: 15px;
-    }
-
-    .bid-item {
-        background: #f9fafb;
-
-        padding: 15px;
-
-        margin-top: 10px;
-
-        border-radius: 7px;
-
-        border: 1px solid #e5e7eb;
-    }
-
-    .no-bids {
-        color: #777;
-    }
-
-    @media (max-width: 700px) {
         header {
-            padding: 18px 20px;
+            height: 76px;
+            padding: 0 6%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border);
+            background: rgba(8, 13, 24, 0.96);
+        }
+
+        .logo {
+            font-family: 'Manrope', sans-serif;
+            font-size: 23px;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        .logo span {
+            color: var(--gold);
+        }
+
+        .nav-link {
+            color: var(--muted);
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+
+        .nav-link:hover {
+            color: var(--gold);
+        }
+
+        .container {
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 38px 24px 70px;
+        }
+
+        .breadcrumb {
+            color: var(--muted);
+            font-size: 13px;
+            margin-bottom: 25px;
+        }
+
+        .breadcrumb a:hover {
+            color: var(--gold);
+        }
+
+        .breadcrumb span {
+            margin: 0 9px;
+            color: #526078;
+        }
+
+        .car-details {
+            display: grid;
+            grid-template-columns: 1.15fr 0.85fr;
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .image-wrap {
+            min-height: 440px;
+            background: #0d1422;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .car-image {
-            height: 300px;
+            width: 100%;
+            height: 100%;
+            min-height: 440px;
+            max-height: 540px;
+            object-fit: cover;
+            display: block;
         }
 
         .info {
-            padding: 20px;
-        }
-
-        h1 {
-            font-size: 27px;
-        }
-
-        .buttons {
+            padding: 38px;
+            display: flex;
             flex-direction: column;
         }
 
-        .button {
-            text-align: center;
+        .eyebrow {
+            color: var(--gold);
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 14px;
         }
-    }
-</style>
-```
 
+        h1 {
+            font-family: 'Manrope', sans-serif;
+            font-size: clamp(27px, 3vw, 38px);
+            line-height: 1.2;
+            letter-spacing: -1.3px;
+            margin: 0 0 25px;
+        }
+
+        .details-list {
+            display: grid;
+            gap: 0;
+        }
+
+        .detail {
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 14px;
+        }
+
+        .detail-label {
+            color: var(--muted);
+        }
+
+        .detail-value {
+            text-align: right;
+            font-weight: 600;
+        }
+
+        .price-label {
+            margin-top: 25px;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .price {
+            margin-top: 5px;
+            font-family: 'Manrope', sans-serif;
+            font-size: 34px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            color: var(--gold);
+        }
+
+        .buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 25px;
+        }
+
+        .button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 46px;
+            padding: 0 20px;
+            border-radius: 9px;
+            font-size: 14px;
+            font-weight: 700;
+            transition: 0.2s;
+        }
+
+        .button-primary {
+            background: var(--gold);
+            color: #17120a;
+        }
+
+        .button-primary:hover {
+            background: var(--gold-hover);
+            transform: translateY(-1px);
+        }
+
+        .button-secondary {
+            background: var(--panel-light);
+            border: 1px solid var(--border);
+            color: var(--text);
+        }
+
+        .button-secondary:hover {
+            border-color: var(--gold);
+        }
+
+        .bids {
+            margin-top: 30px;
+            padding: 25px;
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+        }
+
+        .bids-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .bids h2 {
+            margin: 0;
+            font-family: 'Manrope', sans-serif;
+            font-size: 19px;
+        }
+
+        .bid-count {
+            padding: 5px 10px;
+            border-radius: 20px;
+            background: var(--panel-light);
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .bid-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            padding: 16px;
+            margin-top: 10px;
+            background: var(--panel-light);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+        }
+
+        .bid-user {
+            font-size: 14px;
+            font-weight: 600;
+            overflow-wrap: anywhere;
+        }
+
+        .bid-amount {
+            color: var(--gold);
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .no-bids {
+            padding: 22px;
+            text-align: center;
+            color: var(--muted);
+            font-size: 14px;
+            background: var(--panel-light);
+            border-radius: 10px;
+        }
+
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 25px 6%;
+            text-align: center;
+            color: #78859a;
+            font-size: 12px;
+        }
+
+        @media (max-width: 760px) {
+            header {
+                height: 68px;
+                padding: 0 20px;
+            }
+
+            .container {
+                padding: 25px 16px 45px;
+            }
+
+            .car-details {
+                grid-template-columns: 1fr;
+            }
+
+            .image-wrap,
+            .car-image {
+                min-height: 250px;
+                max-height: 350px;
+            }
+
+            .info {
+                padding: 25px 22px;
+            }
+
+            .bids {
+                padding: 20px;
+            }
+
+            .buttons {
+                flex-direction: column;
+            }
+
+            .button {
+                width: 100%;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
 <header>
-
-```
-<div class="logo">
-    🚗 VeysAuction
-</div>
-
-<a href="/">
-    Home
-</a>
-```
-
+    <a href="/" class="logo">Veys<span>Auction</span></a>
+    <a href="/" class="nav-link">← Back to marketplace</a>
 </header>
 
-<div class="container">
+<main class="container">
 
-```
-<div class="car-details">
-
-    <img
-        class="car-image"
-        src="/static/images/{{ car.image }}"
-        alt="{{ car.brand }} {{ car.model }}"
-    >
-
-
-    <div class="info">
-
-        <h1>
-            {{ car.brand }} {{ car.model }}
-        </h1>
-
-
-        <div class="detail">
-            📅 Year:
-            <b>{{ car.year }}</b>
-        </div>
-
-
-        <div class="detail">
-            🔢 Plate:
-            <b>{{ car.plate_number }}</b>
-        </div>
-
-
-        <div class="detail">
-            🆔 Auction ID:
-            <b>{{ car.id }}</b>
-        </div>
-
-
-        <div class="price">
-            ${{ "%.2f"|format(car.price) }}
-        </div>
-
-
-        <div class="buttons">
-
-            <a
-                href="/cars/{{ car.id }}/bid"
-                class="button bid"
-            >
-                🔨 Place Bid
-            </a>
-
-
-            <a
-                href="/"
-                class="button"
-            >
-                ← Back
-            </a>
-
-        </div>
-
-
-        <div class="bids">
-
-            <h2>
-                📋 Bid History
-            </h2>
-
-
-            {% if bids %}
-
-                {% for bid in bids %}
-
-                    <div class="bid-item">
-
-                        👤 <b>{{ bid.username }}</b>
-
-                        — ${{ "%.2f"|format(bid.amount) }}
-
-                    </div>
-
-                {% endfor %}
-
-            {% else %}
-
-                <p class="no-bids">
-                    No bids yet.
-                </p>
-
-            {% endif %}
-
-        </div>
-
+    <div class="breadcrumb">
+        <a href="/">Marketplace</a>
+        <span>/</span>
+        {{ car.brand }} {{ car.model }}
     </div>
 
-</div>
-```
+    <section class="car-details">
 
-</div>
+        <div class="image-wrap">
+            <img
+                class="car-image"
+                src="/static/images/{{ car.image }}"
+                alt="{{ car.brand }} {{ car.model }}"
+            >
+        </div>
+
+        <div class="info">
+
+            <div class="eyebrow">Vehicle details</div>
+
+            <h1>{{ car.brand }} {{ car.model }}</h1>
+
+            <div class="details-list">
+
+                <div class="detail">
+                    <span class="detail-label">Model year</span>
+                    <span class="detail-value">{{ car.year }}</span>
+                </div>
+
+                <div class="detail">
+                    <span class="detail-label">License plate</span>
+                    <span class="detail-value">{{ car.plate_number }}</span>
+                </div>
+
+                <div class="detail">
+                    <span class="detail-label">Auction ID</span>
+                    <span class="detail-value">#{{ car.id }}</span>
+                </div>
+
+            </div>
+
+            <div class="price-label">Current bid price</div>
+
+            <div class="price">
+                ${{ "%.2f"|format(car.price) }}
+            </div>
+
+            <div class="buttons">
+                <a
+                    href="/cars/{{ car.id }}/bid"
+                    class="button button-primary"
+                >
+                    Place a bid →
+                </a>
+
+                <a href="/" class="button button-secondary">
+                    Back to cars
+                </a>
+            </div>
+
+        </div>
+    </section>
+
+    <section class="bids">
+
+        <div class="bids-header">
+            <h2>Bid history</h2>
+
+            <span class="bid-count">
+                {{ bids|length }} bid(s)
+            </span>
+        </div>
+
+        {% if bids %}
+
+            {% for bid in bids %}
+
+                <div class="bid-item">
+
+                    <span class="bid-user">
+                        {{ bid.username }}
+                    </span>
+
+                    <span class="bid-amount">
+                        ${{ "%.2f"|format(bid.amount) }}
+                    </span>
+
+                </div>
+
+            {% endfor %}
+
+        {% else %}
+
+            <div class="no-bids">
+                No bids yet. Be the first to place a bid!
+            </div>
+
+        {% endif %}
+
+    </section>
+
+</main>
+
+<footer>
+    © 2026 VeysAuction. A QA training project.
+</footer>
 
 </body>
-
 </html>
+```

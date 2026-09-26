@@ -1,16 +1,31 @@
-```html
+
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#101828">
 
-    <title>Place Bid - VeysAuction</title>
+    <title>Place a Bid — VeysAuction</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
+        :root {
+            --navy: #101828;
+            --navy-light: #182438;
+            --gold: #e9aa35;
+            --gold-hover: #d99520;
+            --background: #f5f6f8;
+            --white: #ffffff;
+            --text: #172033;
+            --muted: #788196;
+            --border: #e8ebf0;
+            --green: #16865c;
+            --red: #b42318;
+        }
 
         * {
             box-sizing: border-box;
@@ -18,291 +33,654 @@
 
         body {
             margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f4f5f7;
+            background: var(--background);
+            color: var(--text);
+            font-family: "DM Sans", Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
         }
 
-        .container {
-            width: 450px;
-            max-width: 90%;
-            margin: 70px auto;
-
-            background: white;
-            padding: 35px;
-
-            border-radius: 15px;
-
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.12);
-        }
-
-        h1 {
-            margin-top: 0;
-            text-align: center;
-            color: #111827;
-        }
-
-        .car-name {
-            font-size: 22px;
-            font-weight: bold;
-            margin: 20px 0 10px;
-            color: #222;
-        }
-
-        .current-price {
-            font-size: 20px;
-            color: #16a34a;
-            font-weight: bold;
-            margin-bottom: 25px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 7px;
-            font-weight: bold;
-            color: #333;
-        }
-
-        input {
-            width: 100%;
-            padding: 12px;
-
-            margin-bottom: 20px;
-
-            border: 1px solid #ddd;
-            border-radius: 7px;
-
-            font-size: 16px;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: #2563eb;
-        }
-
-        button {
-            width: 100%;
-
-            padding: 13px;
-
-            background: #f59e0b;
-            color: white;
-
-            border: none;
-            border-radius: 7px;
-
-            font-size: 16px;
-            font-weight: bold;
-
-            cursor: pointer;
-
-            transition: background 0.2s;
-        }
-
-        button:hover {
-            background: #d97706;
-        }
-
-        .back {
-            display: block;
-
-            text-align: center;
-
-            margin-top: 20px;
-
-            color: #2563eb;
+        a {
+            color: inherit;
             text-decoration: none;
         }
 
-        .back:hover {
-            text-decoration: underline;
+        .topbar {
+            background: var(--navy);
+            color: white;
         }
 
-        /* BUG MESSAGE */
+        .navbar {
+            max-width: 1260px;
+            min-height: 76px;
+            margin: auto;
+            padding: 0 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
 
-        .bug-message {
-            margin-bottom: 25px;
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            font-family: "Manrope", sans-serif;
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: -.7px;
+        }
 
-            padding: 20px;
+        .brand-icon {
+            width: 39px;
+            height: 39px;
+            display: grid;
+            place-items: center;
+            border-radius: 12px;
+            background: var(--gold);
+            color: var(--navy);
+        }
 
-            background: #ecfdf5;
+        .brand-name span {
+            color: var(--gold);
+        }
 
-            border: 2px solid #16a34a;
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 26px;
+        }
 
-            border-radius: 10px;
+        .nav-links a {
+            color: #c5ccda;
+            font-size: 13px;
+            font-weight: 600;
+            transition: color .2s;
+        }
 
-            color: #166534;
+        .nav-links a:hover {
+            color: var(--gold);
+        }
 
+        .page-banner {
+            background:
+                radial-gradient(ellipse at 85% 20%, #25344b 0%, transparent 45%),
+                var(--navy);
+            color: white;
+        }
+
+        .banner-inner {
+            max-width: 1260px;
+            margin: auto;
+            padding: 35px 30px 48px;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            color: #aab4c5;
+            font-size: 12px;
+        }
+
+        .breadcrumb a:hover {
+            color: var(--gold);
+        }
+
+        .breadcrumb .current {
+            color: var(--gold);
+        }
+
+        .banner-inner h1 {
+            margin: 22px 0 8px;
+            font-family: "Manrope", sans-serif;
+            font-size: clamp(30px, 4vw, 42px);
+            line-height: 1.2;
+            letter-spacing: -1.3px;
+        }
+
+        .banner-inner p {
+            margin: 0;
+            color: #b9c2d1;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .main-container {
+            max-width: 1100px;
+            margin: auto;
+            padding: 40px 30px 75px;
+        }
+
+        .bid-layout {
+            display: grid;
+            grid-template-columns: 1.05fr .95fr;
+            gap: 26px;
+            align-items: start;
+        }
+
+        .car-card,
+        .bid-card {
+            overflow: hidden;
+            border: 1px solid var(--border);
+            border-radius: 17px;
+            background: var(--white);
+            box-shadow: 0 5px 20px rgba(16, 24, 40, .035);
+        }
+
+        .car-image-wrap {
+            position: relative;
+            height: 290px;
+            overflow: hidden;
+            background: #e9edf2;
+        }
+
+        .car-image {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .image-badge {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            padding: 8px 11px;
+            border: 1px solid rgba(255,255,255,.7);
+            border-radius: 7px;
+            background: rgba(255,255,255,.94);
+            color: #344054;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: .8px;
+            text-transform: uppercase;
+        }
+
+        .car-content {
+            padding: 25px;
+        }
+
+        .eyebrow {
+            color: #a9781c;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1.7px;
+            text-transform: uppercase;
+        }
+
+        .car-title {
+            margin: 8px 0 20px;
+            font-family: "Manrope", sans-serif;
+            font-size: 27px;
+            line-height: 1.3;
+            font-weight: 800;
+            letter-spacing: -.7px;
+        }
+
+        .car-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px 12px;
+            padding: 20px 0;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .detail-label {
+            display: block;
+            margin-bottom: 6px;
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        .detail-value {
+            display: block;
+            overflow-wrap: anywhere;
+            color: #344054;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .current-price {
+            margin-top: 20px;
+            padding: 17px;
+            border-radius: 11px;
+            background: #f0f8f4;
+        }
+
+        .current-price-label {
+            display: block;
+            margin-bottom: 5px;
+            color: #587465;
+            font-size: 12px;
+        }
+
+        .current-price-value {
+            color: var(--green);
+            font-family: "Manrope", sans-serif;
+            font-size: 29px;
+            font-weight: 800;
+            letter-spacing: -.8px;
+            overflow-wrap: anywhere;
+        }
+
+        .bid-card {
+            padding: 29px;
+        }
+
+        .bid-card h2 {
+            margin: 0;
+            font-family: "Manrope", sans-serif;
+            font-size: 25px;
+            font-weight: 800;
+            letter-spacing: -.7px;
+        }
+
+        .bid-description {
+            margin: 10px 0 25px;
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 9px;
+            color: #344054;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .form-group input {
+            display: block;
+            width: 100%;
+            min-height: 49px;
+            padding: 0 14px;
+            border: 1px solid #d9dee7;
+            border-radius: 9px;
+            outline: none;
+            background: white;
+            color: var(--text);
+            font-size: 14px;
+            transition: border-color .2s, box-shadow .2s;
+        }
+
+        .form-group input::placeholder {
+            color: #a0a8b6;
+        }
+
+        .form-group input:focus {
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(233,170,53,.15);
+        }
+
+        .field-hint {
+            display: block;
+            margin-top: 8px;
+            color: var(--muted);
+            font-size: 11px;
             line-height: 1.6;
         }
 
-        .bug-message h3 {
-            margin-top: 0;
-
-            margin-bottom: 15px;
-
-            color: #15803d;
-
-            text-align: center;
+        .error-message {
+            margin-bottom: 22px;
+            padding: 14px 15px;
+            border: 1px solid #f3c5c2;
+            border-radius: 9px;
+            background: #fff3f2;
+            color: var(--red);
+            font-size: 13px;
+            line-height: 1.6;
         }
 
-        .bug-message p {
-            margin: 8px 0 15px;
+        .error-title {
+            display: block;
+            margin-bottom: 4px;
+            font-weight: 700;
         }
 
-        .bug-number {
-            font-weight: bold;
+        .submit-button {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            min-height: 49px;
+            margin-top: 25px;
+            padding: 12px 18px;
+            border: none;
+            border-radius: 9px;
+            background: var(--gold);
+            color: var(--navy);
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 800;
+            transition: background .2s, transform .2s;
         }
 
+        .submit-button:hover {
+            background: #f4bd55;
+            transform: translateY(-1px);
+        }
+
+        .back-link {
+            display: flex;
+            justify-content: center;
+            margin-top: 18px;
+            color: #667085;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .back-link:hover {
+            color: #a9781c;
+        }
+
+        .notice {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: #fafbfc;
+            color: #667085;
+            font-size: 12px;
+            line-height: 1.7;
+        }
+
+        .notice-icon {
+            flex-shrink: 0;
+            font-size: 17px;
+        }
+
+        footer {
+            background: var(--navy);
+            color: white;
+        }
+
+        .footer-inner {
+            max-width: 1260px;
+            margin: auto;
+            padding: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .footer-brand {
+            font-family: "Manrope", sans-serif;
+            font-size: 17px;
+            font-weight: 800;
+        }
+
+        .footer-brand span {
+            color: var(--gold);
+        }
+
+        .footer-note {
+            margin-top: 6px;
+            color: #98a2b3;
+            font-size: 12px;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            color: #c5ccda;
+            font-size: 12px;
+        }
+
+        .footer-links a:hover {
+            color: var(--gold);
+        }
+
+        @media (max-width: 800px) {
+            .bid-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .car-image-wrap {
+                height: 260px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .navbar {
+                padding: 16px 20px;
+                flex-wrap: wrap;
+            }
+
+            .nav-links {
+                width: 100%;
+                justify-content: space-between;
+                gap: 12px;
+                padding-top: 12px;
+                border-top: 1px solid #303b4e;
+            }
+
+            .nav-links a {
+                font-size: 12px;
+            }
+
+            .banner-inner {
+                padding: 30px 20px 38px;
+            }
+
+            .main-container {
+                padding: 25px 16px 50px;
+            }
+
+            .bid-card {
+                padding: 22px;
+            }
+
+            .car-content {
+                padding: 21px;
+            }
+
+            .car-image-wrap {
+                height: 220px;
+            }
+
+            .footer-inner {
+                padding: 25px 20px;
+                align-items: flex-start;
+                flex-direction: column;
+            }
+        }
     </style>
-
 </head>
-
 
 <body>
 
+<header class="topbar">
+    <nav class="navbar">
+        <a href="/" class="brand">
+            <span class="brand-icon">V</span>
+            <span class="brand-name">Veys<span>Auction</span></span>
+        </a>
 
-<div class="container">
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/#cars">Browse Cars</a>
+            <a href="/docs">API Docs</a>
+        </div>
+    </nav>
+</header>
 
+<section class="page-banner">
+    <div class="banner-inner">
+        <div class="breadcrumb">
+            <a href="/">Home</a>
+            <span>/</span>
+            <span>Vehicles</span>
+            <span>/</span>
+            <span class="current">Place a Bid</span>
+        </div>
 
-    <h1>
-        🔨 Make a Bid
-    </h1>
-
-
-    <div class="car-name">
-        {{ car.brand }} {{ car.model }}
+        <h1>Place your bid</h1>
+        <p>Review the vehicle details and enter your offer below.</p>
     </div>
+</section>
 
+<main class="main-container">
+    <div class="bid-layout">
 
-    <div class="current-price">
-        Current price: ${{ car.price }}
+        <section class="car-card">
+            <div class="car-image-wrap">
+                <img
+                    class="car-image"
+                    src="/static/images/{{ car.image }}"
+                    alt="{{ car.brand }} {{ car.model }}"
+                >
+                <span class="image-badge">Auction listing</span>
+            </div>
+
+            <div class="car-content">
+                <div class="eyebrow">Vehicle #{{ car.id }}</div>
+
+                <h2 class="car-title">
+                    {{ car.brand }} {{ car.model }}
+                </h2>
+
+                <div class="car-details">
+                    <div>
+                        <span class="detail-label">Model year</span>
+                        <span class="detail-value">{{ car.year }}</span>
+                    </div>
+
+                    <div>
+                        <span class="detail-label">Auction ID</span>
+                        <span class="detail-value">#{{ car.id }}</span>
+                    </div>
+
+                    <div>
+                        <span class="detail-label">Registration</span>
+                        <span class="detail-value">{{ car.plate_number }}</span>
+                    </div>
+
+                    <div>
+                        <span class="detail-label">Status</span>
+                        <span class="detail-value">Listed for auction</span>
+                    </div>
+                </div>
+
+                <div class="current-price">
+                    <span class="current-price-label">Current price</span>
+                    <div class="current-price-value">
+                        ${{ "%.2f"|format(car.price) }}
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="bid-card">
+            <div class="eyebrow">Your offer</div>
+            <h2>Make an offer</h2>
+
+            <p class="bid-description">
+                Enter your username and the amount you want to bid
+                on this vehicle.
+            </p>
+
+            {% if error %}
+                <div class="error-message" role="alert">
+                    <span class="error-title">Bid could not be accepted</span>
+
+                    {% if error == "negative" %}
+                        The bid amount cannot be negative.
+                    {% else %}
+                        Your bid is lower than the current price.
+                        Please review the amount and try again.
+                    {% endif %}
+                </div>
+            {% endif %}
+
+            <form
+                action="/cars/{{ car.id }}/bid"
+                method="post"
+            >
+                <div class="form-group">
+                    <label for="username">Username</label>
+
+                    <input
+                        type="text"
+                        id="username"
+                        name="username"
+                        placeholder="Enter your username"
+                        required
+                        autocomplete="username"
+                    >
+
+                    <span class="field-hint">
+                        Enter the username associated with your bid.
+                    </span>
+                </div>
+
+                <div class="form-group">
+                    <label for="amount">Your bid (USD)</label>
+
+                    <input
+                        type="number"
+                        id="amount"
+                        name="amount"
+                        placeholder="Enter bid amount"
+                        step="any"
+                        required
+                    >
+
+                    <span class="field-hint">
+                        Current listed price:
+                        ${{ "%.2f"|format(car.price) }}
+                    </span>
+                </div>
+
+                <button type="submit" class="submit-button">
+                    Submit Bid ↗
+                </button>
+            </form>
+
+            <div class="notice">
+                <span class="notice-icon">ⓘ</span>
+                <div>
+                    <strong>Before you submit</strong><br>
+                    Check your username and bid amount before
+                    submitting your offer.
+                </div>
+            </div>
+
+            <a href="/" class="back-link">← Back to all vehicles</a>
+        </section>
+
     </div>
+</main>
 
+<footer>
+    <div class="footer-inner">
+        <div>
+            <div class="footer-brand">Veys<span>Auction</span></div>
+            <div class="footer-note">
+                Find your drive. Win your auction.
+            </div>
+        </div>
 
-    {% if error == "negative" %}
+        <div class="footer-links">
+            <a href="/">Home</a>
+            <a href="/register">Register</a>
+            <a href="/login">Login</a>
+            <a href="/docs">API</a>
+        </div>
 
-    <!-- BUG #3 -->
-
-    <div class="bug-message">
-
-        <h3>
-            🚨 Bug #3 Found!
-        </h3>
-
-
-        <strong>
-            EN:
-        </strong>
-
-        <p>
-            You found <span class="bug-number">Bug #3!</span>
-            The system accepts a negative bid amount.
-        </p>
-
-
-        <strong>
-            AZ:
-        </strong>
-
-        <p>
-            Siz <span class="bug-number">Bug #3-ü</span> tapdınız!
-            Sistem mənfi təklif məbləğini qəbul edir.
-        </p>
-
+        <div class="footer-note">© 2026 VeysAuction</div>
     </div>
-
-
-    {% elif error %}
-
-    <!-- BUG #2 -->
-
-    <div class="bug-message">
-
-        <h3>
-            🎉 Veys congratulates you!
-        </h3>
-
-
-        <strong>
-            EN:
-        </strong>
-
-        <p>
-            You found <span class="bug-number">Bug #2!</span>
-            The system accepts a bid lower than the current price.
-        </p>
-
-
-        <strong>
-            AZ:
-        </strong>
-
-        <p>
-            Siz <span class="bug-number">Bug #2-ni</span> tapdınız!
-            Sistem cari qiymətdən aşağı olan təklifi qəbul edir.
-        </p>
-
-    </div>
-
-    {% endif %}
-
-
-    <form
-        action="/cars/{{ car.id }}/bid"
-        method="post"
-    >
-
-
-        <label for="username">
-            Username
-        </label>
-
-
-        <input
-            type="text"
-            id="username"
-            name="username"
-            placeholder="Enter your username"
-            required
-            autocomplete="username"
-        >
-
-
-        <label for="amount">
-            Your Bid
-        </label>
-
-
-        <input
-            type="number"
-            id="amount"
-            name="amount"
-            placeholder="Enter bid amount"
-            step="0.01"
-            required
-        >
-
-
-        <button type="submit">
-            🔨 Place Bid
-        </button>
-
-
-    </form>
-
-
-    <a
-        href="/cars/{{ car.id }}/details"
-        class="back"
-    >
-        ← Back to car
-    </a>
-
-
-</div>
-
+</footer>
 
 </body>
-
 </html>
-```

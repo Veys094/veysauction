@@ -367,12 +367,20 @@ def car_details(
         if bid["car_id"] == car_id
     ]
 
+    # BUG #5 — QA TRAINING:
+    # Incorrect year on Hyundai Elantra details page.
+    # Original car data and image remain unchanged.
+    car_for_details = car.copy()
+
+    if car_id == 3:
+        car_for_details["year"] = 2021
+
     return templates.TemplateResponse(
         request=request,
         name="car_detail.html",
         context={
             "request": request,
-            "car": car,
+            "car": car_for_details,
             "bids": car_bids
         }
     )
@@ -434,7 +442,8 @@ def make_bid(
         )
 
     # =====================================================
-    # BUG #3 — SYSTEM ACCEPTS NEGATIVE BID
+    # BUG #3 — QA TRAINING:
+    # Negative bid is rejected, but the page returns HTTP 200.
     # =====================================================
 
     if amount < 0:
@@ -451,10 +460,14 @@ def make_bid(
         )
 
     # =====================================================
-    # BUG #2 — SYSTEM ACCEPTS BID LOWER THAN CURRENT PRICE
+    # BUG #2 — QA TRAINING:
+    # A bid lower than the current price is rejected with HTTP 200.
+    #
+    # BUG #6 — QA TRAINING:
+    # A bid equal to the current price is accepted.
     # =====================================================
 
-    if amount <= car["price"]:
+    if amount < car["price"]:
 
         return templates.TemplateResponse(
             request=request,
@@ -547,6 +560,10 @@ def register_user(
     password: str = Form(...),
     db=Depends(get_db)
 ):
+
+    # BUG #4 — QA TRAINING:
+    # Username/password are not validated for whitespace.
+    # Values containing only spaces can pass this route.
 
     existing_user = (
         db.query(UserDB)
@@ -699,6 +716,7 @@ def login_user(
 
     # =====================================================
     # BUG #1 — INTENTIONALLY CREATED FOR QA TRAINING
+    # Wrong password returns HTTP 200 instead of an error status.
     # =====================================================
 
     if user.password != password:
